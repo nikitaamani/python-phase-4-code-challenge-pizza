@@ -7,7 +7,12 @@ function PizzaForm({ restaurantId, onAddPizza }) {
   const [formErrors, setFormErrors] = useState([]);
 
   useEffect(() => {
-    fetch("/pizzas")
+    fetch('http://localhost:5000/pizzas', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
       .then((r) => r.json())
       .then(setPizzas);
   }, []);
@@ -19,7 +24,7 @@ function PizzaForm({ restaurantId, onAddPizza }) {
       restaurant_id: restaurantId,
       price,
     };
-    fetch("/restaurant_pizzas", {
+    fetch("http://localhost:5000/restaurant_pizzas", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
