@@ -1,4 +1,9 @@
-# Phase 4 Code Challenge: Pizza Restaurants (Updated)
+# Phase 4 Code Challenge: Pizza Restaurants 
+
+By Nikita Amani
+Date:18TH JAN 2025
+
+## Description 
 
 In this code challenge, you'll be working with a Pizza Restaurant domain.
 
@@ -24,11 +29,27 @@ pressing the `Import` button.
 
 Select `Upload Files`, navigate to this repo folder, and select
 `challenge-1-pizzas.postman_collection.json` as the file to import.
+## Installation Requirements
+Git
 
-## Setup
+## Installation instruction
 
-The instructions assume you changed into the `code-challenge` folder **prior**
-to opening the code editor.
+## Project Setup
+- clone the repo  
+```bash
+git clone git@github.com:nikitaamani/python-phase-4-code-challenge-pizza.git
+ from the terminal. 
+```
+- navigation
+```bash 
+cd -(change directory) Change directory in your terminal and access it.
+```
+- open directory on vs-code
+```bash 
+use ' code .' in your terminal it will lead to you to the vs-code.
+```
+
+## set instructions
 
 To download the dependencies for the frontend and backend, run:
 
@@ -52,12 +73,6 @@ running:
 npm start --prefix client
 ```
 
-You are not being assessed on React, and you don't have to update any of the
-React code; the frontend code is available just so that you can test out the
-behavior of your API in a realistic setting.
-
-Your job is to build out the Flask API to add the functionality described in the
-deliverables below.
 
 ## Core Deliverables
 
@@ -271,3 +286,10 @@ code:
   "errors": ["validation errors"]
 }
 ```
+Technologies used
+Github 
+Python,Flask,SQLAlchemy
+Visual Studio Code
+
+Support and contact details
+github.com/nikitaamani
