@@ -3,14 +3,9 @@ import { Link } from "react-router-dom";
 
 function Home() {
   const [restaurants, setRestaurants] = useState([]);
-console.log (restaurants)
+
   useEffect(() => {
-    fetch('http://localhost:5000/restaurants', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    fetch("/restaurants")
       .then((r) => r.json())
       .then(setRestaurants);
   }, []);

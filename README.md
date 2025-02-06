@@ -1,253 +1,94 @@
-# Phase 4 Code Challenge: Pizza Restaurants 
+## Pizza Restaurant API
 
-By Nikita Amani
-Date:18TH JAN 2025
+Date, 2025/01/19 ***Nikita Amani***
 
-## Description 
+This project implements a RESTful API for managing a database of restaurants and their associated pizzas. The API supports operations like retrieving restaurant and pizza details, associating pizzas with restaurants, and deleting restaurant records.
 
-In this code challenge, you'll be working with a Pizza Restaurant domain.
+## Features
 
-In this repo:
+* Retrieve all restaurants with their associated pizzas.
+* Retrieve a specific restaurant by its ID, including the pizzas offered by the restaurant.
+* Delete a restaurant along with its associated pizzas.
+* Retrieve all pizzas.
+* Create a new restaurant-pizza association by associating a pizza with a restaurant and specifying a price.
 
-- There is a Flask application with some features built out.
-- There is a fully built React frontend application.
-- There are tests included which you can run using `pytest -x`.
-- There is a file `challenge-1-pizzas.postman_collection.json` that contains a
-  Postman collection of requests for testing each route you will implement.
+## Endpoints
+### 1. GET /restaurants
+Fetches a list of all restaurants.
 
-Depending on your preference, you can either check your API by:
+#### Response
+* 200 OK
 
-- Using Postman to make requests
-- Running `pytest -x` and seeing if your code passes the tests
-- Running the React application in the browser and interacting with the API via
-  the frontend
-
-You can import `challenge-1-pizzas.postman_collection.json` into Postman by
-pressing the `Import` button.
-
-![import postman](https://curriculum-content.s3.amazonaws.com/6130/phase-4-code-challenge-instructions/import_collection.png)
-
-Select `Upload Files`, navigate to this repo folder, and select
-`challenge-1-pizzas.postman_collection.json` as the file to import.
-## Installation Requirements
-Git
-
-## Installation instruction
-
-## Project Setup
-- clone the repo  
-```bash
-git clone git@github.com:nikitaamani/python-phase-4-code-challenge-pizza.git
- from the terminal. 
 ```
-- navigation
-```bash 
-cd -(change directory) Change directory in your terminal and access it.
-```
-- open directory on vs-code
-```bash 
-use ' code .' in your terminal it will lead to you to the vs-code.
-```
-
-## set instructions
-
-To download the dependencies for the frontend and backend, run:
-
-```console
-pipenv install
-pipenv shell
-npm install --prefix client
-```
-
-You can run your Flask API on [`localhost:5555`](http://localhost:5555) by
-running:
-
-```console
-python server/app.py
-```
-
-You can run your React app on [`localhost:4000`](http://localhost:4000) by
-running:
-
-```sh
-npm start --prefix client
-```
-
-
-## Core Deliverables
-
-All of the deliverables are graded for the code challenge.
-
-### Models
-
-You will implement an API for the following data model:
-
-![domain diagram](https://curriculum-content.s3.amazonaws.com/6130/code-challenge-1/domain.png)
-
-The file `server/models.py` defines the model classes **without relationships**.
-Use the following commands to create the initial database `app.db`:
-
-```console
-export FLASK_APP=server/app.py
-flask db init
-flask db migrate
-flask db upgrade head
-```
-
-Now you can implement the relationships as shown in the ER Diagram:
-
-- A `Restaurant` has many `Pizza`s through `RestaurantPizza`
-- A `Pizza` has many `Restaurant`s through `RestaurantPizza`
-- A `RestaurantPizza` belongs to a `Restaurant` and belongs to a `Pizza`
-
-Update `server/models.py` to establish the model relationships. Since a
-`RestaurantPizza` belongs to a `Restaurant` and a `Pizza`, configure the model
-to cascade deletes.
-
-Set serialization rules to limit the recursion depth.
-
-Run the migrations and seed the database:
-
-```console
-flask db revision --autogenerate -m 'message'
-flask db upgrade head
-python server/seed.py
-```
-
-> If you aren't able to get the provided seed file working, you are welcome to
-> generate your own seed data to test the application.
-
-### Validations
-
-Add validations to the `RestaurantPizza` model:
-
-- must have a `price` between 1 and 30
-
-### Routes
-
-Set up the following routes. Make sure to return JSON data in the format
-specified along with the appropriate HTTP verb.
-
-Recall you can specify fields to include or exclude when serializing a model
-instance to a dictionary using to_dict() (don't forget the comma if specifying a
-single field).
-
-NOTE: If you choose to implement a Flask-RESTful app, you need to add code to
-instantiate the `Api` class in server/app.py.
-
-#### GET /restaurants
-
-Return JSON data in the format below:
-
-```json
 [
   {
-    "address": "address1",
     "id": 1,
-    "name": "Karen's Pizza Shack"
+    "name": "Pizza Hut",
+    "address": "123 Main St"
   },
-  {
-    "address": "address2",
-    "id": 2,
-    "name": "Sanjay's Pizza"
-  },
-  {
-    "address": "address3",
-    "id": 3,
-    "name": "Kiki's Pizza"
-  }
+  ...
 ]
 ```
 
-Recall you can specify fields to include or exclude when serializing a model
-instance to a dictionary using `to_dict()` (don't forget the comma if specifying
-a single field).
+### 2. GET /restaurants/{id}
+Fetches a specific restaurant by its ID, along with its associated pizzas.
 
-#### GET /restaurants/<int:id>
+#### Response
+* 200 OK
 
-If the `Restaurant` exists, return JSON data in the format below:
-
-```json
+```
 {
-  "address": "address1",
   "id": 1,
-  "name": "Karen's Pizza Shack",
+  "name": "Pizza Hut",
+  "address": "123 Main St",
   "restaurant_pizzas": [
     {
       "id": 1,
       "pizza": {
         "id": 1,
-        "ingredients": "Dough, Tomato Sauce, Cheese",
-        "name": "Emma"
+        "name": "Margherita",
+        "ingredients": "Dough, Tomato Sauce, Cheese"
       },
+      "price": 10,
       "pizza_id": 1,
-      "price": 1,
       "restaurant_id": 1
-    }
+    },
+    ...
   ]
 }
 ```
+* 404 Not Found if the restaurant does not exist.
 
-If the `Restaurant` does not exist, return the following JSON data, along with
-the appropriate HTTP status code:
+### 3. GET /pizzas
+Fetches a list of all pizzas available in the database.
 
-```json
-{
-  "error": "Restaurant not found"
-}
+#### Response
+* 200 OK
+
 ```
-
-#### DELETE /restaurants/<int:id>
-
-If the `Restaurant` exists, it should be removed from the database, along with
-any `RestaurantPizza`s that are associated with it (a `RestaurantPizza` belongs
-to a `Restaurant`). If you did not set up your models to cascade deletes, you
-need to delete associated `RestaurantPizza`s before the `Restaurant` can be
-deleted.
-
-After deleting the `Restaurant`, return an _empty_ response body, along with the
-appropriate HTTP status code.
-
-If the `Restaurant` does not exist, return the following JSON data, along with
-the appropriate HTTP status code:
-
-```json
-{
-  "error": "Restaurant not found"
-}
-```
-
-#### GET /pizzas
-
-Return JSON data in the format below:
-
-```json
 [
   {
     "id": 1,
-    "ingredients": "Dough, Tomato Sauce, Cheese",
-    "name": "Emma"
+    "name": "Margherita",
+    "ingredients": "Dough, Tomato Sauce, Cheese"
   },
-  {
-    "id": 2,
-    "ingredients": "Dough, Tomato Sauce, Cheese, Pepperoni",
-    "name": "Geri"
-  },
-  {
-    "id": 3,
-    "ingredients": "Dough, Sauce, Ricotta, Red peppers, Mustard",
-    "name": "Melanie"
-  }
+  ...
 ]
 ```
 
-#### POST /restaurant_pizzas
+### 4. DELETE /restaurants/{id}
+Deletes a specific restaurant by its ID and removes all associated restaurant-pizza associations.
 
-This route should create a new `RestaurantPizza` that is associated with an
-existing `Pizza` and `Restaurant`. It should accept an object with the following
-properties in the body of the request:
+#### Response
+* **204 No Content** if the operation is successful.
+* **404 Not Found** if the restaurant does not exist.
 
-```json
+### 5. POST /restaurant_pizzas
+Creates a new restaurant-pizza association by linking a pizza and a restaurant with a specified price.
+
+* Request Body
+
+```
 {
   "price": 5,
   "pizza_id": 1,
@@ -255,41 +96,81 @@ properties in the body of the request:
 }
 ```
 
-If the `RestaurantPizza` is created successfully, send back a response with the
-data related to the `RestaurantPizza`:
+#### Response
+* **201 Created** if successful:
 
-```json
+```
 {
   "id": 4,
-  "pizza": {
-    "id": 1,
-    "ingredients": "Dough, Tomato Sauce, Cheese",
-    "name": "Emma"
-  },
   "pizza_id": 1,
   "price": 5,
-  "restaurant": {
-    "address": "address3",
-    "id": 3,
-    "name": "Kiki's Pizza"
+  "restaurant_id": 3,
+  "pizza": {
+    "id": 1,
+    "name": "Margherita",
+    "ingredients": "Dough, Tomato Sauce, Cheese"
   },
-  "restaurant_id": 3
+  "restaurant": {
+    "id": 3,
+    "name": "Pizza Hut",
+    "address": "123 Main St"
+  }
 }
 ```
 
-If the `RestaurantPizza` is **not** created successfully due to a validation
-error, return the following JSON data, along with the appropriate HTTP status
-code:
+* **400 Bad Request** if validation fails (e.g., invalid price or pizza/restaurant not found):
 
-```json
+```
 {
   "errors": ["validation errors"]
 }
 ```
-Technologies used
-Github 
-Python,Flask,SQLAlchemy
-Visual Studio Code
 
-Support and contact details
-github.com/nikitaamani
+## Setup
+To run this project locally:
+
+1. Clone the repository:
+
+```
+git clone git@github.com:nikitaamani/python-phase-4-code-challenge-pizza.git
+```
+2. Install the required dependencies:
+
+```
+pip install -r requirements.txt
+```
+
+3. Set up the database:
+
+```
+flask db init
+flask db migrate
+flask db upgrade
+```
+4. Run the application:
+
+```
+flask run
+```
+
+The application will be available at http://localhost:5000.
+
+## Technologies Used
+* Flask - Python web framework used to create the API.
+* SQLAlchemy - ORM for managing the SQLite database.
+* Flask-Migrate - Database migration tool to handle schema changes.
+* Flask-RESTful - A simple library to build RESTful APIs in Flask.
+
+## Contributing
+
+Contributions are welcome! Feel free to fork the repository and submit a pull request. To contribute:
+
+1. Fork the repository.
+2. Create a new branch for your changes.
+3. Make the necessary changes and commit them.
+4. Push the changes to your fork.
+5. Create a pull request with a detailed description of your changes.
+
+## License
+The content of this project is licensed under the MIT license Copyright (c) 2025.
+
